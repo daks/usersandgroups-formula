@@ -9,6 +9,9 @@ usersandgroups:
       home:
         source: salt://files/home/
         default_source: salt://files/home_default/
+    home_directory_options:
+      dir_mode: 700
+      file_mode: 600
 
   groups:
     users:
