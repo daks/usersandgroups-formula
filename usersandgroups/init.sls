@@ -59,8 +59,8 @@ group_{{ group }}_present:
   {%- set primary_group = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':primary_group', None) %}
     {%- set primary_group = primary_group if primary_group is not none else user %}
   {%- set password = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':password') %}
-  {%- set groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':groups') %}
-  {%- set optional_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':optional_groups', None) %}
+  {%- set groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':groups', []) %}
+  {%- set optional_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':optional_groups', []) %}
   {%- set system = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':system', False) %}
 
   # definition of $HOME path
@@ -109,6 +109,10 @@ group_{{ group }}_present:
 
   # do we remove its already present groups, depending of global config if not set
   {%- set remove_groups = salt['pillar.get']('usersandgroups:users:' ~ user ~ ':remove_groups', remove_groups_global) %}
+
+/tmp/debug_{{ user }}:
+  file.managed:
+    - contents: {{ groups }}
 
 # creation of all user's groups
 {%- for group in groups|unique %}
